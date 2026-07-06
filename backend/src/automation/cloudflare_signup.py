@@ -1138,40 +1138,41 @@ def main():
                                     if mid in seen_msg_ids:
                                         continue
                                     if 'cloudflare' in str(msg.get('from', '')).lower() or 'cloudflare' in str(msg.get('subject', '')).lower():
-                                        mid = msg.get('id', '')
-                                        full = ammail_request(_ammail_base_url, _ammail_api_key, f"/messages/{urllib.parse.quote(str(mid))}")
-                                        msg_body = full.get("message", full) if isinstance(full, dict) else {}
-                                        body = str(msg_body.get('body', '') or msg_body.get('html', '') or msg_body.get('text', '') or full.get('body', '') or full.get('html', '') or full.get('text', ''))
-                                        # Find ALL 6-digit codes in body, prefer ones near "verification" or "code"
                                         import re as _re_otp
-                                        # Prefer code near context words
-                                        ctx_m = _re_otp.search(r'(?:verification|verify|code|token)[^\d]{0,20}(\d{6})', body, _re_otp.I)
-                                        if not ctx_m:
-                                            ctx_m = _re_otp.search(r'(\d{6})(?:[^\d]{0,20}(?:verification|verify|code|token))', body, _re_otp.I)
-                                        if not ctx_m:
-                                            # Fallback: any 6-digit code that isn't 000000 or repeated digits
-                                            for mm in _re_otp.finditer(r'\b(\d{6})\b', body):
-                                                cand = mm.group(1)
-                                                if cand != '000000' and len(set(cand)) > 2:
-                                                    ctx_m = mm
-                                                    break
-                                        if ctx_m:
-                                            otp_code = ctx_m.group(1) if hasattr(ctx_m, 'group') and ctx_m.lastindex else ctx_m.group(0)
-                                            # Use group 1 if present (context match), else group 0
-                                            try: otp_code = ctx_m.group(1)
-                                            except: otp_code = ctx_m.group(0)
-                                            if otp_code != '000000' and len(set(otp_code)) > 2:
-                                                log_step(f"OTP untuk Global API Key: {otp_code}")
-                                                break
+                                        # Strategy 1: extract code from subject (CF sends "Your Cloudflare login token: NNNNNNN")
+                                        subj = str(msg.get('subject', ''))
+                                        subj_m = _re_otp.search(r'token[:\s]+(\d{5,9})', subj, _re_otp.I)
+                                        if subj_m:
+                                            otp_code = subj_m.group(1)
+                                            log_step(f"OTP dari subject: {otp_code}")
+                                        else:
+                                            # Strategy 2: fetch body
+                                            try:
+                                                full = ammail_request(_ammail_base_url, _ammail_api_key, f"/messages/{urllib.parse.quote(mid)}")
+                                                msg_body = full.get("message", full) if isinstance(full, dict) else {}
+                                                body = str(msg_body.get('body','') or msg_body.get('html','') or msg_body.get('text','') or full.get('body','') or msg.get('snippet',''))
+                                                ctx_m = _re_otp.search(r'(?:token|verify|code)[^\d]{0,30}(\d{5,9})', body, _re_otp.I)
+                                                if not ctx_m:
+                                                    for bm in _re_otp.finditer(r'(?m)^\s*(\d{5,9})\s*$', body):
+                                                        ctx_m = bm; break
+                                                if ctx_m:
+                                                    try: otp_code = ctx_m.group(1)
+                                                    except: otp_code = ctx_m.group(0)
+                                                    if otp_code and len(set(otp_code)) > 1:
+                                                        log_step(f"OTP dari body: {otp_code}")
+                                            except Exception as _be:
+                                                log_step(f"OTP body error: {_be}")
+                                        if otp_code:
+                                            break
                             except Exception as _otp_e:
                                 log_step(f"OTP poll error: {_otp_e}")
                             if otp_code:
                                 break
 
-                        if otp_code:
-                            # Dismiss consent overlay before looking for OTP input
-                            try:
-                                page.evaluate("""
+
+                        # Dismiss consent overlay before looking for OTP input
+                        try:
+                            page.evaluate("""
                                     () => {
                                         const ot = document.querySelector('#onetrust-banner-sdk, #onetrust-consent-sdk');
                                         if (ot) ot.style.display = 'none';
