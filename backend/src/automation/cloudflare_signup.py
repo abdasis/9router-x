@@ -1098,35 +1098,63 @@ def main():
             return None
 
         def create_token_via_session(page):
-            """Fallback: browser JS fetch with proper headers."""
-            log_step("Mencoba buat token via browser fetch API...")
+            """Fallback: use page.request.fetch() (Playwright internal HTTP).
+            Carries browser session cookies but bypasses browser CORS + proxy
+            restrictions that cause NetworkError in page.evaluate fetch().
+            """
+            log_step("Mencoba buat token via Playwright request API...")
             try:
-                result = page.evaluate(f"""
-                    async () => {{
-                        const pgResp = await fetch('https://dash.cloudflare.com/api/v4/user/tokens/permission_groups', {{
-                            credentials: 'include',
-                            headers: {{'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest'}}
-                        }});
-                        const pgText = await pgResp.text();
-                        let pgData;
-                        try {{ pgData = JSON.parse(pgText); }} catch(e) {{ return {{error: 'non-json: ' + pgText.slice(0,100)}}; }}
-                        const groups = pgData.result || [];
-                        let workersAiId = groups.find(g => g.name && g.name.includes('Workers AI'))?.id;
-                        if (!workersAiId) return {{error: 'no Workers AI group', groups: groups.map(g=>g.name).slice(0,10)}};
-                        const tokenResp = await fetch('https://dash.cloudflare.com/api/v4/user/tokens', {{
-                            method: 'POST', credentials: 'include',
-                            headers: {{'Accept': 'application/json', 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest'}},
-                            body: JSON.stringify({{name:'9router-workers-ai',policies:[{{effect:'allow',resources:{{'com.cloudflare.api.account.{account_id}':'*'}},permission_groups:[{{id:workersAiId}}]}}]}})
-                        }});
-                        const tokenData = await tokenResp.json();
-                        return {{success: tokenData.success, value: tokenData.result?.value, error: tokenData.errors?.[0]?.message}};
-                    }}
-                """)
-                log_step(f"Browser fetch result: {str(result)[:300]}")
-                if result and result.get('value'):
-                    return result['value']
+                base = "https://dash.cloudflare.com/api/v4"
+                common_headers = {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    "X-Requested-With": "XMLHttpRequest",
+                    "Referer": "https://dash.cloudflare.com/",
+                    "Origin": "https://dash.cloudflare.com",
+                }
+
+                # Step 1: get Workers AI permission group id
+                pg_resp = page.request.fetch(
+                    f"{base}/user/tokens/permission_groups",
+                    method="GET",
+                    headers=common_headers,
+                )
+                if not pg_resp.ok:
+                    log_step(f"permission_groups HTTP {pg_resp.status}")
+                    return None
+                pg_data = pg_resp.json()
+                groups = pg_data.get("result") or []
+                workers_ai_id = next(
+                    (g["id"] for g in groups if "Workers AI" in g.get("name", "")), None
+                )
+                if not workers_ai_id:
+                    log_step(f"Workers AI group not found. Available: {[g['name'] for g in groups[:10]]}")
+                    return None
+                log_step(f"Workers AI permission group id: {workers_ai_id}")
+
+                # Step 2: create scoped API token
+                payload = {
+                    "name": "9router-workers-ai",
+                    "policies": [{
+                        "effect": "allow",
+                        "resources": {f"com.cloudflare.api.account.{account_id}": "*"},
+                        "permission_groups": [{"id": workers_ai_id}],
+                    }],
+                }
+                tok_resp = page.request.fetch(
+                    f"{base}/user/tokens",
+                    method="POST",
+                    headers=common_headers,
+                    data=__import__("json").dumps(payload),
+                )
+                tok_data = tok_resp.json()
+                log_step(f"Token create result: {str(tok_data)[:300]}")
+                if tok_data.get("success"):
+                    return tok_data["result"].get("value")
+                err = tok_data.get("errors", [{}])[0].get("message", "unknown")
+                log_step(f"Token create failed: {err}")
             except Exception as e:
-                log_step(f"Browser fetch exception: {e}")
+                log_step(f"Playwright request exception: {e}")
             return None
 
         try:
