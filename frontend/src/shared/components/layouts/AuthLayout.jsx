@@ -1,6 +1,6 @@
 
 import PropTypes from "prop-types";
-import ThemeToggle from "../ThemeToggle";
+import ThemeToggle from "../theme-toggle";
 
 export default function AuthLayout({ children }) {
   return (

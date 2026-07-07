@@ -7,7 +7,7 @@ import { cn } from "@/shared/utils/cn";
 import { APP_CONFIG, UPDATER_CONFIG } from "@/shared/constants/config";
 import { MEDIA_PROVIDER_KINDS } from "@/shared/constants/providers";
 import { useCopyToClipboard } from "@/shared/hooks/useCopyToClipboard";
-import Button from "./Button";
+import Button from "./button";
 import { ConfirmModal } from "./Modal";
 import NineRemotePromoModal from "./NineRemotePromoModal";
 
@@ -120,10 +120,10 @@ export default function Sidebar({ onClose }) {
         {/* Logo */}
         <div className="px-6 py-4 flex flex-col gap-2">
           <Link to="/dashboard" className="flex items-center gap-3">
-            <img src="/logo_v2.png" alt="9Router v2" className="size-9 rounded-[10px] object-cover" />
+            <img src="/logo_v2.png" alt="x-router" className="size-9 rounded-[10px] object-cover" />
             <div className="flex flex-col">
               <h1 className="text-lg font-semibold tracking-tight text-text-main leading-tight">
-                9Router v2
+                x-router
               </h1>
               <span className="text-[10px] text-text-muted mt-0.5 leading-none">by ahwanulm</span>
               <span className="text-[10px] text-text-muted opacity-75 mt-0.5 leading-none">v{APP_CONFIG.version}</span>

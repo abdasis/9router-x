@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import Modal from "./Modal";
-import Button from "./Button";
+import Button from "./button";
 import { useCopyToClipboard } from "@/shared/hooks/useCopyToClipboard";
 
 export default function ManualConfigModal({ isOpen, onClose, title = "Manual Configuration", configs = [] }) {

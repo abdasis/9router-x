@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Modal from "./Modal";
 import Input from "./Input";
-import Button from "./Button";
+import Button from "./button";
 import ModelSelectModal from "./ModelSelectModal";
 
 const VALID_NAME_REGEX = /^[a-zA-Z0-9_.\-]+$/;

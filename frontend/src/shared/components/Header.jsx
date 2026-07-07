@@ -4,8 +4,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import PropTypes from "prop-types";
 import ProviderIcon from "@/shared/components/ProviderIcon";
-import HeaderMenu from "@/shared/components/HeaderMenu";
-import ThemeToggle from "@/shared/components/ThemeToggle";
+import HeaderMenu from "@/shared/components/header-menu";
+import ThemeToggle from "@/shared/components/theme-toggle";
 import { useHeaderSearchStore } from "@/store/headerSearchStore";
 import { OAUTH_PROVIDERS, APIKEY_PROVIDERS } from "@/shared/constants/config";
 import { MEDIA_PROVIDER_KINDS, AI_PROVIDERS } from "@/shared/constants/providers";
@@ -220,7 +220,7 @@ export default function Header({ onMenuClick, showMenuButton = true }) {
   };
 
   return (
-    <header className="shrink-0 flex items-center justify-between gap-3 px-4 lg:px-8 pt-3 pb-2 border-b border-border-subtle bg-surface/60 backdrop-blur-xl lg:bg-transparent lg:backdrop-blur-none z-20">
+    <header className="sticky top-0 z-10 shrink-0 flex items-center justify-between gap-3 px-4 lg:px-8 h-12 border-b border-border-subtle bg-surface/60 backdrop-blur-xl">
       {/* Mobile menu button */}
       <div className="flex items-center gap-3 lg:hidden shrink-0">
         {showMenuButton && (
@@ -234,62 +234,53 @@ export default function Header({ onMenuClick, showMenuButton = true }) {
       </div>
 
       {/* Page title with breadcrumbs */}
-      <div className="flex flex-col min-w-0 flex-1">
+      <div className="flex items-center gap-2 min-w-0 flex-1">
         {breadcrumbs.length > 0 ? (
-          <div className="flex items-center gap-2">
-            {breadcrumbs.map((crumb, index) => (
-              <div
-                key={`${crumb.label}-${crumb.href || "current"}`}
-                className="flex items-center gap-2"
-              >
-                {index > 0 && (
-                  <span className="material-symbols-outlined text-text-muted text-base">
-                    chevron_right
-                  </span>
-                )}
-                {crumb.href ? (
-                  <Link
-                    to={crumb.href}
-                    className="text-text-muted hover:text-primary transition-colors"
-                  >
-                    {crumb.label}
-                  </Link>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    {crumb.image && (
-                      <ProviderIcon
-                        src={crumb.image}
-                        alt={crumb.label}
-                        size={28}
-                        className="object-contain rounded max-w-[28px] max-h-[28px]"
-                        fallbackText={crumb.label.slice(0, 2).toUpperCase()}
-                      />
-                    )}
-                    <h1 className="text-base lg:text-2xl font-semibold text-text-main tracking-tight truncate">
-                      {translate(crumb.label)}
-                    </h1>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        ) : title ? (
-          <div>
-            <div className="flex items-center gap-2">
-              {icon && (
-                <span className="material-symbols-outlined text-primary text-xl lg:text-2xl">
-                  {icon}
+          breadcrumbs.map((crumb, index) => (
+            <div
+              key={`${crumb.label}-${crumb.href || "current"}`}
+              className="flex items-center gap-2"
+            >
+              {index > 0 && (
+                <span className="material-symbols-outlined text-text-muted text-base">
+                  chevron_right
                 </span>
               )}
-              <h1 className="text-base lg:text-2xl font-semibold tracking-tight truncate">
-                {translate(title)}
-              </h1>
+              {crumb.href ? (
+                <Link
+                  to={crumb.href}
+                  className="text-sm text-text-muted hover:text-primary transition-colors truncate max-w-[160px]"
+                >
+                  {translate(crumb.label)}
+                </Link>
+              ) : (
+                <div className="flex items-center gap-1.5 min-w-0">
+                  {crumb.image && (
+                    <ProviderIcon
+                      src={crumb.image}
+                      alt={crumb.label}
+                      size={20}
+                      className="object-contain rounded shrink-0 max-w-[20px] max-h-[20px]"
+                      fallbackText={crumb.label.slice(0, 2).toUpperCase()}
+                    />
+                  )}
+                  <h1 className="text-sm font-semibold text-text-main truncate">
+                    {translate(crumb.label)}
+                  </h1>
+                </div>
+              )}
             </div>
-            {description && (
-              <p className="hidden lg:block text-sm text-text-muted truncate">
-                {translate(description)}
-              </p>
+          ))
+        ) : title ? (
+          <div className="flex items-center gap-1.5 min-w-0">
+            {icon && (
+              <span className="material-symbols-outlined text-primary text-lg shrink-0">
+                {icon}
+              </span>
             )}
+            <h1 className="text-sm font-semibold tracking-tight truncate">
+              {translate(title)}
+            </h1>
           </div>
         ) : null}
       </div>

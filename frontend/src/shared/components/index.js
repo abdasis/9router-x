@@ -1,5 +1,5 @@
 // Shared Components - Export all
-export { default as Button } from "./Button";
+export { default as Button } from "./button";
 export { default as Input } from "./Input";
 export { default as Select } from "./Select";
 export { default as Card } from "./Card";
@@ -8,7 +8,7 @@ export { default as Loading, Spinner, PageLoading, Skeleton, CardSkeleton } from
 export { default as Avatar } from "./Avatar";
 export { default as Badge } from "./Badge";
 export { default as Toggle } from "./Toggle";
-export { default as ThemeToggle } from "./ThemeToggle";
+export { default as ThemeToggle } from "./theme-toggle";
 export { ThemeProvider } from "./ThemeProvider";
 export { default as Sidebar } from "./Sidebar";
 export { default as Header } from "./Header";
@@ -21,7 +21,7 @@ export { default as McpMarketplaceModal } from "./McpMarketplaceModal";
 export { default as UsageStats } from "./UsageStats";
 export { default as LanguageSwitcher } from "./LanguageSwitcher";
 export { default as NineRemoteButton } from "./NineRemoteButton";
-export { default as HeaderMenu } from "./HeaderMenu";
+export { default as HeaderMenu } from "./header-menu";
 export { default as ChangelogModal } from "./ChangelogModal";
 export { default as RequestLogger } from "./RequestLogger";
 export { default as KiroAuthModal } from "./KiroAuthModal";

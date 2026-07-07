@@ -38,12 +38,12 @@ export default function DashboardLayout() {
   const noPaddingPages = ["/dashboard/basic-chat", "/dashboard/docs"];
 
   return (
-    <SidebarProvider defaultOpen={true}>
+    <SidebarProvider defaultOpen={true} className="min-h-0 h-svh">
       <TooltipProvider>
         <AppSidebar />
       </TooltipProvider>
 
-      <main data-slot="sidebar-inset" className="relative flex w-full flex-1 flex-col bg-background md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2">
+      <main data-slot="sidebar-inset" className="relative flex w-full flex-1 flex-col min-h-0 overflow-hidden bg-background md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2">
         {/* Toast notifications */}
         <div className="fixed top-4 right-4 z-[80] flex w-[min(92vw,380px)] flex-col gap-2">
           {notifications.map((n) => {
@@ -75,12 +75,10 @@ export default function DashboardLayout() {
           })}
         </div>
 
-        <div className="flex flex-col h-full w-full">
-          <Header />
-          <div className={`flex-1 overflow-y-auto custom-scrollbar ${noPaddingPages.includes(pathname) ? "" : "p-6 lg:p-10"} ${noPaddingPages.includes(pathname) ? "flex flex-col overflow-hidden" : ""}`}>
-            <div className={`${noPaddingPages.includes(pathname) ? "flex-1 w-full h-full flex flex-col" : "max-w-7xl mx-auto"}`}>
-              <Outlet />
-            </div>
+        <Header />
+        <div className={`flex-1 overflow-y-auto custom-scrollbar min-h-0 ${noPaddingPages.includes(pathname) ? "" : "p-6 lg:p-10"} ${noPaddingPages.includes(pathname) ? "flex flex-col" : ""}`}>
+          <div className={`${noPaddingPages.includes(pathname) ? "flex-1 w-full h-full flex flex-col" : "max-w-7xl mx-auto"}`}>
+            <Outlet />
           </div>
         </div>
       </main>
