@@ -1,25 +1,31 @@
 import PropTypes from "prop-types";
-import { Modal, Input, Button } from "@/shared/components";
+import { Modal } from "@/shared/components";
+import { Input } from "@/shared/components";
+import { Button } from "@/shared/components";
 
 export default function CreateKeyModal({ isOpen, onClose, value, onChange, onCreate }) {
   return (
-    <Modal isOpen={isOpen} title="Create API Key" onClose={onClose}>
-      <div className="flex flex-col gap-4">
-        <Input
-          label="Key Name"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder="Production Key"
-        />
-        <div className="flex gap-2">
-          <Button onClick={onCreate} fullWidth disabled={!value.trim()}>
-            Create
-          </Button>
-          <Button onClick={onClose} variant="ghost" fullWidth>
+    <Modal
+      isOpen={isOpen}
+      title="Create API Key"
+      onClose={onClose}
+      footer={
+        <>
+          <Button onClick={onClose} variant="ghost">
             Cancel
           </Button>
-        </div>
-      </div>
+          <Button onClick={onCreate} disabled={!value.trim()}>
+            Create
+          </Button>
+        </>
+      }
+    >
+      <Input
+        label="Key Name"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder="Production Key"
+      />
     </Modal>
   );
 }
