@@ -119,29 +119,36 @@ function processElement(element) {
   nodesToProcess.forEach(processTextNode);
 }
 
+// Skip React root to prevent DOM mismatch with React virtual DOM
+function isReactRoot(node) {
+  return node.nodeType === Node.ELEMENT_NODE &&
+    (node.getAttribute?.('id') === 'root' ||
+     node.getAttribute?.('data-i18n-skip') !== null);
+}
+
 // Initialize runtime i18n
 export async function initRuntimeI18n() {
   if (typeof window === "undefined") return;
-  
+
   currentLocale = getLocaleFromCookie();
   await loadTranslations(currentLocale);
-  
-  // Process existing DOM
-  processElement(document.body);
-  
-  // Watch for new nodes
+
+  // Watch for new nodes (skip React root subtree)
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       mutation.addedNodes.forEach((node) => {
+        if (isReactRoot(node)) return;
         if (node.nodeType === Node.ELEMENT_NODE) {
-          processElement(node);
+          const el = node;
+          if (el.querySelector?.('[data-i18n-skip], #root')) return;
+          processElement(el);
         } else if (node.nodeType === Node.TEXT_NODE) {
           processTextNode(node);
         }
       });
     });
   });
-  
+
   observer.observe(document.body, {
     childList: true,
     subtree: true,

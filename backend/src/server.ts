@@ -6,7 +6,7 @@ import { authMiddleware } from "./middleware/auth.js";
 import { buildAutoRouter } from "./autoRouter.js";
 
 const PORT = Number(process.env.PORT) || 3001;
-const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || "http://localhost:5177";
+const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || "http://localhost:5178";
 
 const app = express();
 

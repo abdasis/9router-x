@@ -382,37 +382,62 @@ input, textarea {
   accent-color: var(--color-primary);
 }
 
-/* Scrollbar (custom-scrollbar utility kept for compat) */
+/* Viewport height chain — layout children use h-full */
+html, body, #root {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Hide default browser scrollbar — only custom-scrollbar elements show theirs */
+html,
+body {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
+
+/* Scrollbar (custom-scrollbar utility) */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: rgba(156, 163, 175, 0.3);
+  background-color: rgba(156, 163, 175, 0.2);
   border-radius: 20px;
+  transition: background-color 0.2s ease;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background-color: var(--color-primary);
+  background-color: rgba(156, 163, 175, 0.45);
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:active {
+  background-color: var(--color-brand-500);
 }
 
-/* Thin horizontal scrollbar - brand colored */
+/* Thin horizontal scrollbar */
 .scroll-thin-x {
   scrollbar-width: thin;
-  scrollbar-color: rgba(229, 106, 74, 0.55) transparent;
+  scrollbar-color: rgba(156, 163, 175, 0.2) transparent;
 }
 .dark .scroll-thin-x {
-  scrollbar-color: rgba(229, 106, 74, 0.55) transparent;
+  scrollbar-color: rgba(156, 163, 175, 0.2) transparent;
 }
-.scroll-thin-x::-webkit-scrollbar { height: 3px; }
+.scroll-thin-x::-webkit-scrollbar { height: 4px; }
 .scroll-thin-x::-webkit-scrollbar-track { background: transparent; }
 .scroll-thin-x::-webkit-scrollbar-thumb {
-  background: rgba(229, 106, 74, 0.55);
-  border-radius: 3px;
+  background: rgba(156, 163, 175, 0.2);
+  border-radius: 20px;
+  transition: background-color 0.2s ease;
 }
-.dark .scroll-thin-x::-webkit-scrollbar-thumb {
-  background: rgba(229, 106, 74, 0.55);
+.scroll-thin-x::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.45);
+}
+.scroll-thin-x::-webkit-scrollbar-thumb:active {
+  background: var(--color-brand-500);
 }
 
 /* Reusable elevated card */
