@@ -1,38 +1,18 @@
+"use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
 import PropTypes from "prop-types";
-import {
-  Menu, ChevronRight, User, Heart, Search, X,
-  Server, Layers, BarChart3, Key, Activity, Shield,
-  Terminal, Network, Puzzle, Plug, FolderOpen,
-  Settings, Languages, Monitor,
-} from "lucide-react";
 import ProviderIcon from "@/shared/components/ProviderIcon";
-import HeaderMenu from "@/shared/components/header-menu";
-import ThemeToggle from "@/shared/components/theme-toggle";
+import HeaderMenu from "@/shared/components/HeaderMenu";
+import HeaderLanguage from "@/shared/components/HeaderLanguage";
+import ThemeToggle from "@/shared/components/ThemeToggle";
+import DonateModal from "@/shared/components/DonateModal";
 import { useHeaderSearchStore } from "@/store/headerSearchStore";
 import { OAUTH_PROVIDERS, APIKEY_PROVIDERS } from "@/shared/constants/config";
 import { MEDIA_PROVIDER_KINDS, AI_PROVIDERS } from "@/shared/constants/providers";
 import { translate } from "@/i18n/runtime";
-
-const PAGE_ICONS = {
-  perm_media: FolderOpen,
-  dns: Server,
-  layers: Layers,
-  bar_chart: BarChart3,
-  vpn_key: Key,
-  data_usage: Activity,
-  security: Shield,
-  terminal: Terminal,
-  lan: Network,
-  extension: Puzzle,
-  api: Plug,
-  settings: Settings,
-  translate: Languages,
-  monitor: Monitor,
-};
 
 const getPageInfo = (pathname) => {
   if (!pathname) return { title: "", description: "", breadcrumbs: [] };
@@ -191,11 +171,12 @@ const getPageInfo = (pathname) => {
 };
 
 export default function Header({ onMenuClick, showMenuButton = true }) {
-  const { pathname } = useLocation();
-  const navigate = useNavigate();
+  const pathname = usePathname();
+  const router = useRouter();
   const [displayName, setDisplayName] = useState("");
   const [loginMethod, setLoginMethod] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [donateOpen, setDonateOpen] = useState(false);
  
   // Memoize page info to prevent unnecessary recalculations
   const pageInfo = useMemo(() => getPageInfo(pathname), [pathname]);
@@ -233,9 +214,8 @@ export default function Header({ onMenuClick, showMenuButton = true }) {
     try {
       const res = await fetch("/api/auth/logout", { method: "POST" });
       if (res.ok) {
-        localStorage.removeItem("9r_authed");
-        navigate("/login?force=true");
-        navigate(0);
+        router.push("/login");
+        router.refresh();
       }
     } catch (err) {
       console.error("Failed to logout:", err);
@@ -243,7 +223,7 @@ export default function Header({ onMenuClick, showMenuButton = true }) {
   };
 
   return (
-    <header className="sticky top-0 z-10 shrink-0 flex items-center justify-between gap-3 px-4 lg:px-8 h-12 border-b border-border-subtle bg-surface/60 backdrop-blur-xl">
+    <header className="shrink-0 flex items-center justify-between gap-3 px-4 lg:px-8 pt-3 pb-2 border-b border-border-subtle bg-surface/60 backdrop-blur-xl lg:bg-transparent lg:backdrop-blur-none z-20">
       {/* Mobile menu button */}
       <div className="flex items-center gap-3 lg:hidden shrink-0">
         {showMenuButton && (
@@ -251,56 +231,68 @@ export default function Header({ onMenuClick, showMenuButton = true }) {
             onClick={onMenuClick}
             className="text-text-main hover:text-primary transition-colors"
           >
-            <Menu size={20} />
+            <span className="material-symbols-outlined">menu</span>
           </button>
         )}
       </div>
 
       {/* Page title with breadcrumbs */}
-      <div className="flex items-center gap-2 min-w-0 flex-1">
+      <div className="flex flex-col min-w-0 flex-1">
         {breadcrumbs.length > 0 ? (
-          breadcrumbs.map((crumb, index) => (
-            <div
-              key={`${crumb.label}-${crumb.href || "current"}`}
-              className="flex items-center gap-2"
-            >
-              {index > 0 && (
-                <ChevronRight size={16} className="text-text-muted shrink-0" />
-              )}
-              {crumb.href ? (
-                <Link
-                  to={crumb.href}
-                  className="text-sm text-text-muted hover:text-primary transition-colors truncate max-w-[160px]"
-                >
-                  {translate(crumb.label)}
-                </Link>
-              ) : (
-                <div className="flex items-center gap-1.5 min-w-0">
-                  {crumb.image && (
-                    <ProviderIcon
-                      src={crumb.image}
-                      alt={crumb.label}
-                      size={20}
-                      className="object-contain rounded shrink-0 max-w-[20px] max-h-[20px]"
-                      fallbackText={crumb.label.slice(0, 2).toUpperCase()}
-                    />
-                  )}
-                  <h1 className="text-sm font-semibold text-text-main truncate">
-                    {translate(crumb.label)}
-                  </h1>
-                </div>
-              )}
-            </div>
-          ))
+          <div className="flex items-center gap-2">
+            {breadcrumbs.map((crumb, index) => (
+              <div
+                key={`${crumb.label}-${crumb.href || "current"}`}
+                className="flex items-center gap-2"
+              >
+                {index > 0 && (
+                  <span className="material-symbols-outlined text-text-muted text-base">
+                    chevron_right
+                  </span>
+                )}
+                {crumb.href ? (
+                  <Link
+                    href={crumb.href}
+                    className="text-text-muted hover:text-primary transition-colors"
+                  >
+                    {crumb.label}
+                  </Link>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    {crumb.image && (
+                      <ProviderIcon
+                        src={crumb.image}
+                        alt={crumb.label}
+                        size={28}
+                        className="object-contain rounded max-w-[28px] max-h-[28px]"
+                        fallbackText={crumb.label.slice(0, 2).toUpperCase()}
+                      />
+                    )}
+                    <h1 className="text-base lg:text-2xl font-semibold text-text-main tracking-tight truncate">
+                      {translate(crumb.label)}
+                    </h1>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         ) : title ? (
-          <div className="flex items-center gap-1.5 min-w-0">
-            {icon && (() => {
-              const IconComp = PAGE_ICONS[icon] || Plug;
-              return <IconComp size={18} className="text-primary shrink-0" />;
-            })()}
-            <h1 className="text-sm font-semibold tracking-tight truncate">
-              {translate(title)}
-            </h1>
+          <div>
+            <div className="flex items-center gap-2">
+              {icon && (
+                <span className="material-symbols-outlined text-primary text-xl lg:text-2xl">
+                  {icon}
+                </span>
+              )}
+              <h1 className="text-base lg:text-2xl font-semibold tracking-tight truncate">
+                {translate(title)}
+              </h1>
+            </div>
+            {description && (
+              <p className="hidden lg:block text-sm text-text-muted truncate">
+                {translate(description)}
+              </p>
+            )}
           </div>
         ) : null}
       </div>
@@ -309,7 +301,7 @@ export default function Header({ onMenuClick, showMenuButton = true }) {
       <div className="flex items-center gap-1 shrink-0">
         {displayName && loginMethod === "OIDC" && (
           <div className="hidden sm:flex items-center max-w-[220px] px-3 py-1.5 rounded-full border border-border bg-surface/70 text-xs text-text-muted truncate">
-            <User size={14} className="mr-1.5 text-primary shrink-0" />
+            <span className="material-symbols-outlined text-[14px] mr-1.5 text-primary">person</span>
             <span className="truncate">{displayName}</span>
             <span className="ml-2 shrink-0 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary">
               OIDC
@@ -317,19 +309,19 @@ export default function Header({ onMenuClick, showMenuButton = true }) {
           </div>
         )}
         <HeaderSearch />
-        <a
-          href="https://mayar.to/ahwanulm"
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          onClick={() => setDonateOpen(true)}
           className="flex items-center gap-1.5 px-3 h-8 rounded-lg border border-pink-500/30 bg-pink-500/10 text-pink-600 dark:text-pink-400 hover:bg-pink-500/20 transition-colors text-sm font-medium"
           aria-label="Donate"
         >
-          <Heart size={18} />
+          <span className="material-symbols-outlined text-[18px]">volunteer_activism</span>
           <span className="hidden sm:inline">Donate</span>
-        </a>
+        </button>
         <ThemeToggle />
+        <HeaderLanguage />
         <HeaderMenu onLogout={handleLogout} isLoggedIn={isLoggedIn} />
       </div>
+      <DonateModal isOpen={donateOpen} onClose={() => setDonateOpen(false)} />
     </header>
   );
 }
@@ -344,7 +336,9 @@ function HeaderSearch() {
 
   return (
     <div className="relative w-[160px] sm:w-[220px]">
-      <Search size={16} className="absolute left-2 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
+      <span className="material-symbols-outlined absolute left-2 top-1/2 -translate-y-1/2 text-text-muted text-[16px] pointer-events-none">
+        search
+      </span>
       <input
         type="text"
         value={query}
@@ -359,7 +353,7 @@ function HeaderSearch() {
           className="absolute right-1 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-main p-0.5 rounded"
           aria-label="Clear search"
         >
-          <X size={16} />
+          <span className="material-symbols-outlined text-[16px]">close</span>
         </button>
       )}
     </div>
