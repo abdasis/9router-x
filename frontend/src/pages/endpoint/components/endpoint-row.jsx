@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { Check, Copy } from "lucide-react";
 import { Input } from "@/shared/components";
 
 export default function EndpointRow({ label, url, copyId, copied, onCopy, actions }) {
@@ -12,7 +13,7 @@ export default function EndpointRow({ label, url, copyId, copied, onCopy, action
         onClick={() => onCopy(url, copyId)}
         className="p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded text-text-muted hover:text-primary transition-colors shrink-0"
       >
-        <span className="material-symbols-outlined text-[18px]">{copied === copyId ? "check" : "content_copy"}</span>
+                {copied === copyId ? <Check size={18} /> : <Copy size={18} />}
       </button>
       {actions}
     </div>

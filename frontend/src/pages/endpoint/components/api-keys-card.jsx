@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { KeyRound, Plus, Check, Copy, Eye, EyeOff, Trash2 } from "lucide-react";
 import { Card, Button, Toggle, ConfirmModal } from "@/shared/components";
 import SecurityWarning from "@/pages/endpoint/components/security-warning";
 import { useCopyToClipboard } from "@/shared/hooks/useCopyToClipboard";
@@ -36,10 +37,11 @@ export default function ApiKeysCard({
     <Card id="require-api-key">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold flex items-center gap-2">
-          <span className="material-symbols-outlined text-primary">vpn_key</span>
+          <KeyRound className="text-primary" size={20} />
           API Keys
         </h2>
-        <Button icon="add" onClick={onCreateKey}>
+        <Button onClick={onCreateKey}>
+          <Plus size={18} />
           Create Key
         </Button>
       </div>
@@ -63,11 +65,12 @@ export default function ApiKeysCard({
       {keys.length === 0 ? (
         <div className="text-center py-12">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 text-primary mb-4">
-            <span className="material-symbols-outlined text-[32px]">vpn_key</span>
+            <KeyRound size={32} />
           </div>
           <p className="text-text-main font-medium mb-1">No API keys yet</p>
           <p className="text-sm text-text-muted mb-4">Create your first API key to get started</p>
-          <Button icon="add" onClick={onCreateKey}>
+          <Button onClick={onCreateKey}>
+            <Plus size={18} />
             Create Key
           </Button>
         </div>
@@ -115,17 +118,13 @@ function ApiKeyRow({ keyData, copied, copy, isVisible, onToggleVisibility, getMa
             className="p-1 hover:bg-black/5 dark:hover:bg-white/5 rounded text-text-muted hover:text-primary opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all"
             title={isVisible ? "Hide key" : "Show key"}
           >
-            <span className="material-symbols-outlined text-[14px]">
-              {isVisible ? "visibility_off" : "visibility"}
-            </span>
+            {isVisible ? <EyeOff size={14} /> : <Eye size={14} />}
           </button>
           <button
             onClick={() => copy(keyData.key, keyData.id)}
             className="p-1 hover:bg-black/5 dark:hover:bg-white/5 rounded text-text-muted hover:text-primary opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all"
           >
-            <span className="material-symbols-outlined text-[14px]">
-              {copied === keyData.id ? "check" : "content_copy"}
-            </span>
+            {copied === keyData.id ? <Check size={14} /> : <Copy size={14} />}
           </button>
         </div>
         <p className="text-xs text-text-muted mt-1">
@@ -152,7 +151,7 @@ function ApiKeyRow({ keyData, copied, copy, isVisible, onToggleVisibility, getMa
           onClick={onDelete}
           className="p-2 hover:bg-red-500/10 rounded text-red-500 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-all"
         >
-          <span className="material-symbols-outlined text-[18px]">delete</span>
+          <Trash2 size={18} />
         </button>
       </div>
     </div>

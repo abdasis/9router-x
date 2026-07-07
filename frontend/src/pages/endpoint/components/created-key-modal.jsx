@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { Check, Copy } from "lucide-react";
 import { Modal, Input, Button } from "@/shared/components";
 import { useCopyToClipboard } from "@/shared/hooks/useCopyToClipboard";
 
@@ -20,9 +21,9 @@ export default function CreatedKeyModal({ createdKey, onClose }) {
           <Input value={createdKey || ""} readOnly className="flex-1 font-mono text-sm" />
           <Button
             variant="secondary"
-            icon={copied === "created_key" ? "check" : "content_copy"}
             onClick={() => copy(createdKey, "created_key")}
           >
+            {copied === "created_key" ? <Check size={16} /> : <Copy size={16} />}
             {copied === "created_key" ? "Copied!" : "Copy"}
           </Button>
         </div>

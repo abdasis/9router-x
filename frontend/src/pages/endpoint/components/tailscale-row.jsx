@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { ExternalLink, Power, LoaderCircle, AlertCircle, Check, Copy } from "lucide-react";
 import { Input, Button } from "@/shared/components";
 
 export default function TailscaleRow({ tsState, copied, copy, onOpen, onDisable }) {
@@ -21,20 +22,20 @@ export default function TailscaleRow({ tsState, copied, copy, onOpen, onDisable 
             onClick={() => copy(`${tsUrl}/v1`, "ts_url")}
             className="p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded text-text-muted hover:text-primary transition-colors shrink-0"
           >
-            <span className="material-symbols-outlined text-[18px]">{copied === "ts_url" ? "check" : "content_copy"}</span>
+            {copied === "ts_url" ? <Check size={18} /> : <Copy size={18} />}
           </button>
           <button
             onClick={onDisable}
             className="p-2 hover:bg-red-500/10 rounded text-red-500 transition-colors shrink-0"
             title="Disable Tailscale"
           >
-            <span className="material-symbols-outlined text-[18px]">power_settings_new</span>
+            <Power size={18} />
           </button>
         </>
       ) : tsEnabled && !tsLoading && !tsReachable ? (
         <>
           <div className="flex-1 flex items-center gap-2 px-3 py-1.5 rounded border border-amber-300 dark:border-amber-800 bg-amber-500/5 text-sm text-amber-600 dark:text-amber-400">
-            <span className="material-symbols-outlined animate-spin text-sm">progress_activity</span>
+            <LoaderCircle size={16} className="animate-spin" />
             {tsEverReachable ? "Tailscale reconnecting..." : "Tailscale checking..."}
           </div>
           <button
@@ -42,21 +43,21 @@ export default function TailscaleRow({ tsState, copied, copy, onOpen, onDisable 
             className="p-2 hover:bg-red-500/10 rounded text-red-500 transition-colors shrink-0"
             title="Disable Tailscale"
           >
-            <span className="material-symbols-outlined text-[18px]">power_settings_new</span>
+            <Power size={18} />
           </button>
         </>
       ) : (tsLoading || tsConnecting) ? (
         <>
           <div className="flex-1 flex items-center gap-2 px-3 py-1.5 rounded border border-border bg-input text-sm text-text-muted">
-            <span className="material-symbols-outlined animate-spin text-sm">progress_activity</span>
+            <LoaderCircle size={16} className="animate-spin" />
             {tsProgress || "Connecting..."}
           </div>
           {tsAuthUrl && (
             <Button
               size="sm"
-              icon="open_in_new"
               onClick={() => window.open(tsAuthUrl, "tailscale_auth", "width=600,height=700,noopener,noreferrer")}
             >
+              <ExternalLink size={16} />
               {tsAuthLabel || "Open"}
             </Button>
           )}
@@ -65,25 +66,24 @@ export default function TailscaleRow({ tsState, copied, copy, onOpen, onDisable 
             className="p-2 hover:bg-red-500/10 rounded text-red-500 transition-colors shrink-0"
             title="Stop"
           >
-            <span className="material-symbols-outlined text-[18px]">power_settings_new</span>
+            <Power size={18} />
           </button>
         </>
       ) : tsStatus?.type === "error" ? (
         <>
           <div className="flex-1 flex items-center gap-2 px-3 py-1.5 rounded border border-red-300 dark:border-red-800 bg-red-500/5 text-sm text-red-600 dark:text-red-400">
-            <span className="material-symbols-outlined text-sm">error</span>
+            <AlertCircle size={16} />
             {tsStatus.message}
           </div>
-          <Button size="sm" icon="vpn_lock" onClick={onOpen}>Enable</Button>
+          <Button size="sm" onClick={onOpen}><ExternalLink size={16} /> Enable</Button>
         </>
       ) : (
         <Button
           size="sm"
-          icon="vpn_lock"
           onClick={onOpen}
           className="bg-linear-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white!"
         >
-          Enable
+          <ExternalLink size={16} /> Enable
         </Button>
       )}
     </div>

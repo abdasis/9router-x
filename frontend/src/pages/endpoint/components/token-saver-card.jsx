@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { Bolt } from "lucide-react";
 import { Card, Toggle } from "@/shared/components";
 import { WENYAN_LOCALES, CAVEMAN_LEVELS } from "@/pages/endpoint/constants/endpoint";
 
@@ -20,7 +21,7 @@ export default function TokenSaverCard({
     <Card id="rtk">
       <div className="flex items-center justify-between mb-2">
         <h2 className="text-lg font-semibold flex items-center gap-2">
-          <span className="material-symbols-outlined text-primary">bolt</span>
+          <Bolt className="text-primary" size={20} />
           Token Saver
         </h2>
       </div>

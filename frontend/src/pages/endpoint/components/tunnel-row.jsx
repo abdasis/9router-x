@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { Cloud, Power, LoaderCircle, AlertCircle, Check, Copy } from "lucide-react";
 import { Input, Button } from "@/shared/components";
 
 export default function TunnelRow({ tunnelState, copied, copy, onEnable, onDisable }) {
@@ -21,20 +22,20 @@ export default function TunnelRow({ tunnelState, copied, copy, onEnable, onDisab
             onClick={() => copy(`${tunnelPublicUrl || tunnelUrl}/v1`, "tunnel_url")}
             className="p-2 hover:bg-black/5 dark:hover:bg-white/5 rounded text-text-muted hover:text-primary transition-colors shrink-0"
           >
-            <span className="material-symbols-outlined text-[18px]">{copied === "tunnel_url" ? "check" : "content_copy"}</span>
+            {copied === "tunnel_url" ? <Check size={18} /> : <Copy size={18} />}
           </button>
           <button
             onClick={onDisable}
             className="p-2 hover:bg-red-500/10 rounded text-red-500 transition-colors shrink-0"
             title="Disable Tunnel"
           >
-            <span className="material-symbols-outlined text-[18px]">power_settings_new</span>
+            <Power size={18} />
           </button>
         </>
       ) : tunnelEnabled && !tunnelLoading && !tunnelReachable ? (
         <>
           <div className="flex-1 flex items-center gap-2 px-3 py-1.5 rounded border border-amber-300 dark:border-amber-800 bg-amber-500/5 text-sm text-amber-600 dark:text-amber-400">
-            <span className="material-symbols-outlined animate-spin text-sm">progress_activity</span>
+            <LoaderCircle size={16} className="animate-spin" />
             {tunnelEverReachable ? "Tunnel reconnecting..." : "Tunnel checking..."}
           </div>
           <button
@@ -42,13 +43,13 @@ export default function TunnelRow({ tunnelState, copied, copy, onEnable, onDisab
             className="p-2 hover:bg-red-500/10 rounded text-red-500 transition-colors shrink-0"
             title="Disable Tunnel"
           >
-            <span className="material-symbols-outlined text-[18px]">power_settings_new</span>
+            <Power size={18} />
           </button>
         </>
       ) : tunnelLoading ? (
         <>
           <div className="flex-1 flex items-center gap-2 px-3 py-1.5 rounded border border-border bg-input text-sm text-text-muted">
-            <span className="material-symbols-outlined animate-spin text-sm">progress_activity</span>
+<LoaderCircle size={16} className="animate-spin" />
             {tunnelProgress || "Creating tunnel..."}
           </div>
           <button
@@ -56,21 +57,21 @@ export default function TunnelRow({ tunnelState, copied, copy, onEnable, onDisab
             className="p-2 hover:bg-red-500/10 rounded text-red-500 transition-colors shrink-0"
             title="Stop"
           >
-            <span className="material-symbols-outlined text-[18px]">power_settings_new</span>
+            <Power size={18} />
           </button>
         </>
       ) : tunnelStatus?.type === "error" ? (
         <>
           <div className="flex-1 flex items-center gap-2 px-3 py-1.5 rounded border border-red-300 dark:border-red-800 bg-red-500/5 text-sm text-red-600 dark:text-red-400">
-            <span className="material-symbols-outlined text-sm">error</span>
+<AlertCircle size={16} />
             {tunnelStatus.message}
           </div>
-          <Button size="sm" icon="cloud_upload" onClick={onEnable}>Enable</Button>
+          <Button size="sm" onClick={onEnable}><Cloud size={16} /> Enable</Button>
         </>
       ) : tunnelChecking ? (
         <>
           <div className="flex-1 flex items-center gap-2 px-3 py-1.5 rounded border border-border bg-input text-sm text-text-muted">
-            <span className="material-symbols-outlined animate-spin text-sm">progress_activity</span>
+<LoaderCircle size={16} className="animate-spin" />
             Checking...
           </div>
           <button
@@ -78,13 +79,11 @@ export default function TunnelRow({ tunnelState, copied, copy, onEnable, onDisab
             className="p-2 hover:bg-red-500/10 rounded text-red-500 transition-colors shrink-0"
             title="Stop"
           >
-            <span className="material-symbols-outlined text-[18px]">power_settings_new</span>
+            <Power size={18} />
           </button>
         </>
       ) : (
-        <Button size="sm" icon="cloud_upload" onClick={onEnable}>
-          Enable
-        </Button>
+        <Button size="sm" onClick={onEnable}><Cloud size={16} /> Enable</Button>
       )}
     </div>
   );

@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { Cpu } from "lucide-react";
 import { Card, Toggle } from "@/shared/components";
 import EndpointRow from "@/pages/endpoint/components/endpoint-row";
 import TunnelRow from "@/pages/endpoint/components/tunnel-row";
@@ -29,7 +30,7 @@ export default function EndpointCard({
   return (
     <Card>
       <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-        <span className="material-symbols-outlined text-primary">api</span>
+        <Cpu className="text-primary" size={20} />
         API Endpoint
       </h2>
 

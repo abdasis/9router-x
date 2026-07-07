@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { LoaderCircle, CheckCircle } from "lucide-react";
 import { Modal, Button } from "@/shared/components";
 import StatusAlert from "@/pages/endpoint/components/status-alert";
 
@@ -18,7 +19,7 @@ export default function TailscaleModal({
       <div className="flex flex-col gap-4">
         {tsInstalled === null && (
           <p className="text-sm text-text-muted flex items-center gap-2">
-            <span className="material-symbols-outlined animate-spin text-sm">progress_activity</span>
+            <LoaderCircle size={16} className="animate-spin" />
             Checking...
           </p>
         )}
@@ -40,7 +41,7 @@ export default function TailscaleModal({
         {tsInstalling && (
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2 text-sm text-text-muted">
-              <span className="material-symbols-outlined animate-spin text-sm">progress_activity</span>
+  <LoaderCircle size={16} className="animate-spin" />
               Installing Tailscale...
             </div>
             {tsInstallLog.length > 0 && (
@@ -56,7 +57,7 @@ export default function TailscaleModal({
         {tsInstalled === true && !tsInstalling && (
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
-              <span className="material-symbols-outlined text-[16px]">check_circle</span>
+              <CheckCircle size={16} />
               Tailscale installed
             </div>
             <div className="flex gap-2">
