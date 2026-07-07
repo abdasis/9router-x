@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.5.0",
   "type": "module",
-  "description": "9Router v2 — Vite + React + TypeScript Dashboard",
+  "description": "x-router — Vite + React + TypeScript Dashboard (9Router UI fork)",
   "scripts": {
     "dev": "vite --port 5178",
     "build": "tsc -b && vite build",

@@ -1,4 +1,4 @@
-# Workspace Agent Instructions — 9router-v2
+# Workspace Agent Instructions — x-router (UI fork of 9Router)
 
 ## Changelog Update (MANDATORY)
 

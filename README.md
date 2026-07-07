@@ -1,8 +1,8 @@
-# 9Router v2
+# x-router
 
 > A self-hosted AI gateway — one endpoint, many providers, auto-fallback.
 
-9Router v2 is a decoupled rewrite of [9Router](https://github.com/decolua/9router) with a clean separation between a dedicated **Express backend** and a **Vite + React frontend**. It exposes an OpenAI-compatible REST API that proxies requests across dozens of AI providers with automatic load balancing, fallback, and key rotation.
+**x-router** is a **UI-focused fork and redesign** of [9Router](https://github.com/decolua/9router). While the original 9Router is a powerful AI gateway, this project reimagines the entire frontend experience — modern React architecture, shadcn/ui components, lucide icons, cleaner layouts, and improved developer ergonomics — while keeping the same rock-solid Express backend and provider routing engine.
 
 ---
 
@@ -29,7 +29,7 @@
 ## Architecture
 
 ```
-9router-v2/
+x-router/
 ├── backend/          # Express server (port 3001)
 │   └── src/
 │       ├── routes/   # Auto-routed endpoints (/v1, /api, /auth, ...)
@@ -55,8 +55,8 @@
 ### Install
 
 ```bash
-git clone https://github.com/ahwanulm/9router-v2.git
-cd 9router-v2
+git clone https://github.com/ahwanulm/x-router.git
+cd x-router
 npm install
 ```
 
@@ -124,7 +124,7 @@ Skills are SKILL.md files for AI coding agents. Paste the entry skill URL into y
 
 ```
 Read this skill and use it:
-https://raw.githubusercontent.com/ahwanulm/9router-v2/refs/heads/master/skills/9router/SKILL.md
+https://raw.githubusercontent.com/ahwanulm/x-router/refs/heads/master/skills/9router/SKILL.md
 ```
 
 Browse all skills in the Dashboard → Skills page or in the [`skills/`](./skills/) directory.
@@ -154,4 +154,4 @@ MIT — see [LICENSE](./LICENSE)
 
 ## Acknowledgements
 
-> 🙏 **Thanks to [9Router](https://github.com/decolua/9router)** — this project is a fork and architectural rewrite of the original 9Router monolith. The core routing logic, provider integrations, and many features were inspired by and built upon the excellent work of the 9Router project.
+> 🙏 **Thanks to [9Router](https://github.com/decolua/9router)** — x-router is a fork of the original 9Router monolith. This project focuses on redesigning and modernizing the UI layer while keeping the proven backend routing engine intact. All core routing logic, provider integrations, and backend features credit to the 9Router project.

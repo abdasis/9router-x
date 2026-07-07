@@ -1,6 +1,6 @@
-# 9Router v2 Changelog
+# x-router Changelog
 
-All notable changes to the decoupled **9Router v2** platform will be documented here.
+All notable changes to the **x-router** platform (UI-focused fork of 9Router) will be documented here.
 
 ---
 
