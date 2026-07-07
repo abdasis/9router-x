@@ -2,7 +2,7 @@
 import { useState, useCallback } from "react";
 import PropTypes from "prop-types";
 import OAuthModal from "./o-auth-modal";
-import KiroAuthModal from "./KiroAuthModal";
+import KiroAuthModal from "./kiro-auth-modal";
 import KiroSocialOAuthModal from "./KiroSocialOAuthModal";
 
 /**

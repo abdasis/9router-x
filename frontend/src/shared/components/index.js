@@ -24,7 +24,7 @@ export { default as NineRemoteButton } from "./NineRemoteButton";
 export { default as HeaderMenu } from "./header-menu";
 export { default as ChangelogModal } from "./ChangelogModal";
 export { default as RequestLogger } from "./RequestLogger";
-export { default as KiroAuthModal } from "./KiroAuthModal";
+export { default as KiroAuthModal } from "./kiro-auth-modal";
 export { default as KiroOAuthWrapper } from "./KiroOAuthWrapper";
 export { default as KiroSocialOAuthModal } from "./KiroSocialOAuthModal";
 export { default as CursorAuthModal } from "./CursorAuthModal";
