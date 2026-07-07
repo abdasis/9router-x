@@ -1,7 +1,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Card from "@/shared/components/Card";
-import Button from "@/shared/components/Button";
+import Button from "@/shared/components/button";
 import Drawer from "@/shared/components/Drawer";
 import Pagination from "@/shared/components/Pagination";
 import { cn } from "@/shared/utils/cn";
